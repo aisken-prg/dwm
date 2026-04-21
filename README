@@ -46,3 +46,8 @@ Configuration
 -------------
 The configuration of dwm is done by creating a custom config.h
 and (re)compiling the source code.
+
+Dependencies
+------------
+sudo pacman -S base-devel git libx11 libxft libxinerama xorg-server xorg-xinit
+sudo apt install xorg xinit build-essential git libx11-dev libxft-dev libxinerama-dev libfreetype6-dev libfontconfig1-dev
