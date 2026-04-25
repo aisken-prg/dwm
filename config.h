@@ -11,7 +11,7 @@ static const unsigned int systrayonleft = 0;    /* 0: systray in the right corne
 static const unsigned int systrayspacing = 2;   /* systray spacing */
 static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display systray on the first monitor, False: display systray on the last monitor*/
 static const int showsystray        = 1;        /* 0 means no systray */
-static const unsigned int gappx     = 20;        /* gaps between windows */
+static const unsigned int gappx     = 10;        /* gaps between windows */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const char *fonts[]          = { "Hack Nerd Font:style=Regular:size=10" };
@@ -21,7 +21,7 @@ static char normbordercolor[]       = "#444444";
 static char normfgcolor[]           = "#bbbbbb";
 static char selfgcolor[]            = "#eeeeee";
 static char selbordercolor[]        = "#85adbe";
-static char selbgcolor[]            = "#2d3440";
+static char selbgcolor[]            = "#2f3642";
 static char *colors[][3] = {
        /*               fg           bg           border   */
        [SchemeNorm] = { normfgcolor, normbgcolor, normbordercolor },
@@ -33,14 +33,13 @@ static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
 static const Rule rules[] = {
 	/* xprop(1):
-	 *	WM_CLASS(STRING) = instance, class
-	 *	WM_NAME(STRING) = title
+	 *	WM_CLASS(STRING) = instance, class	 *	WM_NAME(STRING) = title
 	 */
 	/* class      	     instance    title    tags mask     isfloating   monitor */
 	{ "Gimp",            NULL,       NULL,    0,            0,           -1 },
 	{ "Steam",	     NULL,       NULL,    0,            1,           -1 },
 	{ "Firefox",         NULL,       NULL,    1 << 8,       0,           -1 },
-	{ "st",              NULL,       NULL,    0,            0,     	     -1 },
+	{ "mpv",              NULL,       NULL,    0,           1,     	     -1 },
 };
 
 /* layout(s) */
@@ -48,7 +47,7 @@ static const float mfact     = 0.50; /* factor of master area size [0.05..0.95] 
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 1;    /* 1 means respect size hints in tiled resizals */
 static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
-static const int refreshrate = 144;  /* refresh rate (per second) for client move/resize */
+static const int refreshrate = 60;  /* refresh rate (per second) for client move/resize */
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
@@ -73,25 +72,33 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "rofi", "-show", "drun", "-show-icons",  NULL };
-static const char *fileman[] = { "pcmanfm",  NULL };
+static const char *fileman[] = { "st", "-e", "yazi",  NULL };
 static const char *termcmd[]  = { "st", NULL };
 static const char *browser[]    = { "firefox", NULL };
+/* static const char *btop[] 	= { "st", "-e", "btop", NULL }; */
 
-
-/* volume stuff */
+/* stuff */
 static const char *upvol[]      = { "/usr/bin/wpctl",   "set-volume", "@DEFAULT_AUDIO_SINK@",      "5%+",      NULL };
 static const char *downvol[]    = { "/usr/bin/wpctl",   "set-volume", "@DEFAULT_AUDIO_SINK@",      "5%-",      NULL };
 static const char *mutevol[]    = { "/usr/bin/wpctl",   "set-mute",   "@DEFAULT_AUDIO_SINK@",      "toggle",   NULL };
 static const char *changewall[] = { "/opt/scripts/change-wallpaper-rofi.sh", NULL};
 static const char *power[]	= { "/opt/scripts/poweroff-rofi.sh", NULL};
 static const char *playpause[]	= { "playerctl", "play-pause", NULL };
+static const char *next[]          = { "playerctl", "next", NULL };
+static const char *prev[]          = { "playerctl", "previous", NULL };
+static const char *stop[]          = { "playerctl", "stop", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
-	{ 0,                       XF86XK_AudioLowerVolume, 	spawn, 	{.v = downvol } },
-	{ 0,                       XF86XK_AudioMute, 		spawn, 	{.v = mutevol } },
-	{ 0,                       XF86XK_AudioRaiseVolume, 	spawn, 	{.v = upvol   } },
-	{ 0,				XF86XK_AudioPlay, 	spawn,	{.v = playpause } },
+	/* fn functions */
+	/* { 0,				XF86XK_Launch1,			spawn,	{.v = btop } }, */
+	{ 0,                       	XF86XK_AudioLowerVolume, 	spawn, 	{.v = downvol } },
+	{ 0,                       	XF86XK_AudioMute, 		spawn, 	{.v = mutevol } },
+	{ 0,                       	XF86XK_AudioRaiseVolume, 	spawn, 	{.v = upvol   } },
+	{ 0,				XF86XK_AudioPlay, 		spawn,	{.v = playpause } },
+        { 0,                        	XF86XK_AudioNext, 		spawn,  {.v = next } },
+        { 0,                        	XF86XK_AudioPrev, 		spawn,  {.v = prev } },
+        { 0,                        	XF86XK_AudioStop, 		spawn,  {.v = stop } },
 	/* My Shortcuts eg. change wallpaper */
 	{ ALTKEY|ControlMask, 		XK_Delete, spawn,	   {.v = power } },
 	{ MODKEY|ShiftMask,		XK_w,	   spawn,          {.v = changewall } },
