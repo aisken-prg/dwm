@@ -4,16 +4,17 @@
 
 
 /* appearance */
-static const unsigned int borderpx  = 3;        /* border pixel of windows */
+static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
 static const unsigned int systrayonleft = 0;    /* 0: systray in the right corner, >0: systray on left of status text */
 static const unsigned int systrayspacing = 2;   /* systray spacing */
 static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display systray on the first monitor, False: display systray on the last monitor*/
 static const int showsystray        = 1;        /* 0 means no systray */
-static const unsigned int gappx     = 10;        /* gaps between windows */
+static const unsigned int gappx     = 20;        /* gaps between windows */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
+static const int user_bh            = 22;        /* 0 means that dwm will calculate bar height, >= 1 means dwm will user_bh as bar height */
 static const char *fonts[]          = { "Hack Nerd Font:style=Regular:size=10" };
 static const char dmenufont[]       = "monospace:size=10";
 static char normbgcolor[]           = "#222222";
@@ -30,6 +31,11 @@ static char *colors[][3] = {
 
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+
+static const unsigned int ulinepad		= 0;	/* horizontal padding between the underline and tag */
+static const unsigned int ulinestroke	= 2;	/* thickness / height of the underline */
+static const unsigned int ulinevoffset	= 0;	/* how far above the bottom of the bar the line should appear */
+static const int ulineall				= 0;	/* 1 to show underline on all tags, 0 for just the active ones */
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -74,15 +80,19 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[] = { "rofi", "-show", "drun", "-show-icons",  NULL };
 static const char *fileman[] = { "st", "-e", "yazi",  NULL };
 static const char *termcmd[]  = { "st", NULL };
-static const char *browser[]    = { "firefox", NULL };
+static const char scratchpadname[] = "scratchpad";
+static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "120x34", NULL };
+static const char *browser[]    = { "librewolf", NULL };
+static const char *lockscrn[]   = { "slock", NULL };
 /* static const char *btop[] 	= { "st", "-e", "btop", NULL }; */
 
 /* stuff */
 static const char *upvol[]      = { "/usr/bin/wpctl",   "set-volume", "@DEFAULT_AUDIO_SINK@",      "5%+",      NULL };
 static const char *downvol[]    = { "/usr/bin/wpctl",   "set-volume", "@DEFAULT_AUDIO_SINK@",      "5%-",      NULL };
 static const char *mutevol[]    = { "/usr/bin/wpctl",   "set-mute",   "@DEFAULT_AUDIO_SINK@",      "toggle",   NULL };
-static const char *changewall[] = { "/opt/scripts/change-wallpaper-rofi.sh", NULL};
-static const char *power[]	= { "/opt/scripts/poweroff-rofi.sh", NULL};
+static const char *changewall[] = { "/opt/scripts/change-wallpaper-rofi.sh", NULL };
+static const char *changexres[] = { "/opt/scripts/colorscheme-browser", NULL };
+static const char *power[]	= { "/opt/scripts/poweroff-rofi.sh", NULL };
 static const char *playpause[]	= { "playerctl", "play-pause", NULL };
 static const char *next[]          = { "playerctl", "next", NULL };
 static const char *prev[]          = { "playerctl", "previous", NULL };
@@ -100,22 +110,25 @@ static const Key keys[] = {
         { 0,                        	XF86XK_AudioPrev, 		spawn,  {.v = prev } },
         { 0,                        	XF86XK_AudioStop, 		spawn,  {.v = stop } },
 	/* My Shortcuts eg. change wallpaper */
+	{ MODKEY|ShiftMask,		XK_e,	   spawn,	   {.v = changexres } },
 	{ ALTKEY|ControlMask, 		XK_Delete, spawn,	   {.v = power } },
 	{ MODKEY|ShiftMask,		XK_w,	   spawn,          {.v = changewall } },
 	{ MODKEY,                       XK_F5,     xrdb,           {.v = NULL } },
 	/* Programs */
 	{ MODKEY,                       XK_r,      spawn,          {.v = dmenucmd } },
 	{ MODKEY,	                XK_Return, spawn,          {.v = termcmd } },
+    { MODKEY,                       XK_grave,  togglescratch,  {.v = scratchpadcmd } },
 	{ MODKEY,                       XK_e,      spawn,          {.v = fileman } },
 	{ MODKEY,                       XK_g,      spawn,          {.v = browser } },
 	/* Other Stuff */
+    { MODKEY|ShiftMask,             XK_l,      spawn,          {.v = lockscrn } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
 	/* { MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
 	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } }, */
-	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
-	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
+	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.025} },
+	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.025} },
 	{ MODKEY,                       XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
