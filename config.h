@@ -14,15 +14,15 @@ static const int showsystray        = 1;        /* 0 means no systray */
 static const unsigned int gappx     = 20;        /* gaps between windows */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const int user_bh            = 22;        /* 0 means that dwm will calculate bar height, >= 1 means dwm will user_bh as bar height */
+static const int user_bh            = 24;        /* 0 means that dwm will calculate bar height, >= 1 means dwm will user_bh as bar height */
 static const char *fonts[]          = { "Hack Nerd Font:style=Regular:size=10" };
 static const char dmenufont[]       = "monospace:size=10";
-static char normbgcolor[]           = "#222222";
-static char normbordercolor[]       = "#444444";
-static char normfgcolor[]           = "#bbbbbb";
-static char selfgcolor[]            = "#eeeeee";
-static char selbordercolor[]        = "#85adbe";
-static char selbgcolor[]            = "#2f3642";
+static char normbgcolor[]           = "#1d1f21";
+static char normbordercolor[]       = "#1d1f21";
+static char normfgcolor[]           = "#c5c8c6";
+static char selfgcolor[]            = "#efa064";
+static char selbordercolor[]        = "#efa064";
+static char selbgcolor[]            = "#1d1f21";
 static char *colors[][3] = {
        /*               fg           bg           border   */
        [SchemeNorm] = { normfgcolor, normbgcolor, normbordercolor },
